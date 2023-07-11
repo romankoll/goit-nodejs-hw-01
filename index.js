@@ -1,20 +1,34 @@
-// const argv = require("yargs").argv;
-
 const contacts = require("./contacts");
+// const yargs = require("yargs");
+// const { hideBin } = require("yargs/helpers");
 
-// // TODO: рефакторити
+const { Command } = require("commander");
+const program = new Command();
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
+
+program.parse(process.argv);
+
+const argv = program.opts();
+
+console.log(argv);
+
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case "list":
       const allContacts = await contacts.listContacts();
       console.log(allContacts);
-      // ...
+
       break;
 
     case "get":
       const oneContact = await contacts.getContactById(id);
       console.log(oneContact);
-      // ... id
+
       break;
 
     case "add":
@@ -24,7 +38,6 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
         phone,
       });
       console.log(newContact);
-      // ... name email phone
       break;
 
     case "update":
@@ -34,12 +47,13 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
         phone,
       });
       console.log(updateContact);
-      // ... id
+
       break;
+
     case "remove":
       const deleteContact = await contacts.removeContact(id);
       console.log(deleteContact);
-      // ... id
+
       break;
 
     default:
@@ -47,16 +61,4 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
   }
 };
 
-// invokeAction(argv);
-// invokeAction({ action: "list" });
-// invokeAction({ action: "get", id: "drsAJ4SHPYqZeG-83QTVW" });
-// invokeAction({ action: "add", name: "12", email: "12", phone: "12" });
-
-// invokeAction({
-//   action: "update",
-//   id: "DhhOREwdPsGmee2f066dQ",
-//   name: "32",
-//   email: "32",
-//   phone: "32",
-// });
-invokeAction({ action: "remove", id: "Z-rkf-GjZcqtl3iWc2NLC" });
+invokeAction(argv);
